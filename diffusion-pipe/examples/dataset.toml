@@ -1,0 +1,22 @@
+# Dataset configuration tailored for Wan2.1 i2v LoRA training.
+# The loader expects ONLY videos so the first frame can be used as conditioning.
+
+# Target spatial resolution(s). Using a single width/height pair avoids aspect ratio bucketing.
+resolutions = [[854, 480]]
+enable_ar_bucket = false
+
+# Configure the clip length buckets (number of frames). 81 works well for Wan i2v 14B.
+frame_buckets = [1, 121]
+
+# Shuffle captions only if you need heavy tag randomisation.
+# cache_shuffle_num = 0
+
+[[directory]]
+# Replace with the directory that holds your training videos (and companion .txt captions if available).
+path = 'IO/videos'
+
+# Masks share the same stem as the video file and live in this folder.
+mask_path = 'IO/masks'
+
+# LoRA training usually keeps repeats at 1; bump it if you need to upsample this source.
+num_repeats = 1
