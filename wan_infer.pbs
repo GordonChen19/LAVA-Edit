@@ -1,0 +1,32 @@
+#!/bin/bash
+#PBS -N wan22_infer
+#PBS -P gs_slab     
+#PBS -q gpu_v100              
+#PBS -l select=1:ncpus=4:ngpus=1:mem=64gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+
+# Load environment
+module load anaconda2025/2025
+eval "$(/usr/local/anaconda2025/bin/conda shell.bash hook)"
+source activate wan22 
+module load cuda/12.2
+
+
+
+# Redirect HuggingFace caches to scratch
+export HF_HOME=/scratch/$USER/hf_cache/hf
+export TRANSFORMERS_CACHE=/scratch/$USER/hf_cache/transformers
+export TORCH_HOME=/scratch/$USER/hf_cache/torch
+mkdir -p "$HF_HOME" "$TRANSFORMERS_CACHE" "$TORCH_HOME"
+
+
+# Run Wan2.2 text-to-video
+python /projects_vol/gp_slab/chen2008/Wan2.2/generate.py \
+  --task t2v-A14B \
+  --size 1280*720 \
+  --ckpt_dir /scratch/$USER/wan_ckpts/Wan2.2-T2V-A14B \
+  --offload_model True \
+  --convert_model_dtype \
+  --prompt "Camera zooms out to reveal a cinematic video of a car driving in the dessert" \
+  --using_prompt_extend False
