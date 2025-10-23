@@ -37,6 +37,7 @@ timestep_sample_method = 'logit_normal'
 type = 'lora'
 rank = 32
 dtype = 'bfloat16'
+target_modules = ['q', 'k', 'v', 'o']
 
 [optimizer]
 type = 'AdamW8bitKahan'

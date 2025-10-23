@@ -183,14 +183,24 @@ class BasePipeline:
         raise NotImplementedError()
 
     def configure_adapter(self, adapter_config):
-        target_linear_modules = set()
-        for name, module in self.transformer.named_modules():
-            if module.__class__.__name__ not in self.adapter_target_modules:
-                continue
-            for full_submodule_name, submodule in module.named_modules(prefix=name):
-                if isinstance(submodule, nn.Linear):
-                    target_linear_modules.add(full_submodule_name)
-        target_linear_modules = list(target_linear_modules)
+        # Check if user provided custom target modules
+        custom_target_modules = adapter_config.get('target_modules', None)
+        
+        if custom_target_modules:
+            # Use user-specified target modules (e.g., ['q', 'k', 'v', 'o'])
+            target_linear_modules = []
+            for name, module in self.transformer.named_modules():
+                if module.__class__.__name__ not in self.adapter_target_modules:
+                    continue
+                for full_submodule_name, submodule in module.named_modules(prefix=name):
+                    if isinstance(submodule, nn.Linear):
+                        # Check if the layer name ends with any of the target module names
+                        layer_name = full_submodule_name.split('.')[-1]
+                        if layer_name in custom_target_modules:
+                            target_linear_modules.append(full_submodule_name)
+        else:
+            raise(NotImplementedError('Default target modules selection is not implemented. Please provide custom target modules in the config.'))
+        
 
         adapter_type = adapter_config['type']
         if adapter_type == 'lora':
