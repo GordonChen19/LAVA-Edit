@@ -3,6 +3,7 @@ IO/
 venv/
 .vscode/
 Wan2.1/
+annotations.json
 
 
 # Byte-compiled / optimized / DLL files
