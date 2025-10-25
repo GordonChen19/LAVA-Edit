@@ -3,7 +3,7 @@ toml
 transformers
 torch
 torchvision
-cv2-python
+opencv-python
 pillow
 diffusers>=0.35.1
 datasets

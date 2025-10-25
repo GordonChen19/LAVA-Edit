@@ -85,6 +85,7 @@ def get_masks(video_frames, model_name="facebook/sam2.1-hiera-tiny", annotations
     mask = torch.from_numpy(mask).float()  # [T, H, W]
 
     torch.save(mask, save_path)
+    
 
 
 

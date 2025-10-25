@@ -105,7 +105,9 @@ if __name__ == "__main__":
 
     elif stage == "prepare_masks":
         
-        get_masks(video_frames, annotations_filepath=annotations_save_path, save_path= os.path.join(mask_folder, f"{identifier}.pt"))
+        get_masks(video_frames, 
+                  annotations_filepath=annotations_save_path, 
+                  save_path= os.path.join(mask_folder, f"{identifier}.pt"))
 
     elif stage == "train":
         # Set environment variables for single-GPU DeepSpeed training
@@ -113,7 +115,7 @@ if __name__ == "__main__":
         subprocess.run(
             [
                 "deepspeed",
-                "--num_gpus=4",
+                "--num_gpus=1",
                 os.path.join(current_dir, "diffusion-pipe/train.py"),
                 "--deepspeed",
                 "--config",
