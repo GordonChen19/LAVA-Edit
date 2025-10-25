@@ -74,6 +74,8 @@ def get_masks(video_frames, model_name="facebook/sam2.1-hiera-tiny", annotations
 
     mask = np.zeros((len(video_segments), inference_session.video_height, inference_session.video_width), dtype=np.uint8)
 
+    print(mask.shape)
+
     #Convert to pytorch tensor mask [1, T, H, W]
     for frame_idx in video_segments.keys():
         for _, obj_mask in video_segments[frame_idx].items():
@@ -85,7 +87,7 @@ def get_masks(video_frames, model_name="facebook/sam2.1-hiera-tiny", annotations
     mask = torch.from_numpy(mask).float()  # [T, H, W]
 
     torch.save(mask, save_path)
-    
+
 
 
 

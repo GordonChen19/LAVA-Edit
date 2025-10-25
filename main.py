@@ -77,7 +77,7 @@ if __name__ == "__main__":
     current_dir = args.current_dir
     annotations_save_path = os.path.join(current_dir, args.annotations_save_path)
 
-    video_frames, orig_fps = load_video(video_path)
+    video_frames, _ = load_video(video_path)
     video_frames = video_frames[:fps*seconds]  #Take first n seconds of the video [T, H, W, C]
     video_frames = resize_video_frames(torch.tensor(video_frames))
 
