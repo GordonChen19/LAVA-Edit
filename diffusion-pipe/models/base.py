@@ -140,7 +140,7 @@ class PreprocessMediaFile:
             mask = None
 
         resized_video = torch.empty((num_frames, 3, height_rounded, width_rounded))
-        for i, frame in enumerate(video):
+        for i, frame in enumerate(video): 
             if not isinstance(frame, Image.Image):
                 frame = torchvision.transforms.functional.to_pil_image(frame)
             cropped_image = convert_crop_and_resize(frame, resize_wh)
@@ -148,7 +148,7 @@ class PreprocessMediaFile:
 
         if hasattr(filepath_or_file, 'close'):
             filepath_or_file.close()
-
+ 
         if not self.support_video:
             return [(resized_video.squeeze(0), mask)]
 

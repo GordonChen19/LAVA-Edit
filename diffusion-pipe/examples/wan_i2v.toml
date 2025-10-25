@@ -1,13 +1,13 @@
 # Minimal Wan2.1 i2v LoRA training recipe. Start from this and tweak paths/batch sizes to match your hardware.
 
-output_dir = './training_output'
-dataset = 'diffusion-pipe/examples/dataset.toml'
+output_dir = '/projects_vol/gp_slab/chen2008/lava/training_output'
+dataset = '/projects_vol/gp_slab/chen2008/lava/diffusion-pipe/examples/dataset.toml'
 
 # Training settings
 epochs = 1000
 max_steps = 200 
 micro_batch_size_per_gpu = 1
-pipeline_stages = 1
+pipeline_stages = 4
 gradient_accumulation_steps = 1
 gradient_clipping = 1.0
 warmup_steps = 10
@@ -22,11 +22,10 @@ save_dtype = 'bfloat16'
 caching_batch_size = 1
 steps_per_print = 1
 video_clip_mode = 'single_beginning'
-blocks_to_swap = 32
 
 [model]
 type = 'wan'
-ckpt_path = './Wan2.1-I2V-14B-480P'
+ckpt_path = '/projects_vol/gp_slab/chen2008/lava/Wan2.1-I2V-14B-480P'
 dtype = 'bfloat16'
 # fp8 keeps memory in check without hurting convergence for LoRA.
 transformer_dtype = 'float8'

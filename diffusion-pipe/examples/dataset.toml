@@ -5,18 +5,19 @@
 resolutions = [[854, 480]]
 enable_ar_bucket = false
 
+num_ar_buckets = 1
 # Configure the clip length buckets (number of frames). 81 works well for Wan i2v 14B.
-frame_buckets = [1, 121]
+frame_buckets = [1, 80]
 
 # Shuffle captions only if you need heavy tag randomisation.
 # cache_shuffle_num = 0
 
 [[directory]]
 # Replace with the directory that holds your training videos (and companion .txt captions if available).
-path = 'IO/videos'
+path = '/projects_vol/gp_slab/chen2008/lava/IO/inputs'
 
 # Masks share the same stem as the video file and live in this folder.
-mask_path = 'IO/masks'
+mask_path = '/projects_vol/gp_slab/chen2008/lava/IO/masks'
 
 # LoRA training usually keeps repeats at 1; bump it if you need to upsample this source.
 num_repeats = 1
