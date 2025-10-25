@@ -91,6 +91,7 @@ def get_masks(video_frames, model_name="facebook/sam2.1-hiera-tiny", annotations
 
 
 
+
 # print(len(video_segments))          # → 180 frames
 # print(video_segments[0].keys())     # → dict_keys([2, 3])
 # print(video_segments[0][2].shape)   # → torch.Size([1, 480, 854])
