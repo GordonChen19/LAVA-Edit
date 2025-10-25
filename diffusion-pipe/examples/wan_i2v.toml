@@ -7,10 +7,11 @@ dataset = '/projects_vol/gp_slab/chen2008/lava/diffusion-pipe/examples/dataset.t
 epochs = 1000
 max_steps = 200 
 micro_batch_size_per_gpu = 1
-pipeline_stages = 4
+pipeline_stages = 1
 gradient_accumulation_steps = 1
 gradient_clipping = 1.0
 warmup_steps = 10
+blocks_to_swap = 20
 
 
 # Misc

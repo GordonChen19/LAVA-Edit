@@ -156,7 +156,15 @@ import json
 video_url = "https://huggingface.co/datasets/hf-internal-testing/sam2-fixtures/resolve/main/bedroom.mp4"
 video_frames, _ = load_video(video_url)
 
-annotations = annotate(video_frames)
+video_frames = video_frames[:80]  #Take first n seconds of the video [T, H, W, C]
+
+from prepare_video import resize_video_frames
+import torch
+video_frames = resize_video_frames(torch.tensor(video_frames))
+
+
+
+annotations = annotate(video_frames.numpy())
 
 with open("annotations.json", "w") as f:
     json.dump({"annotations": annotations}, f)

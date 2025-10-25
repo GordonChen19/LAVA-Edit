@@ -99,7 +99,7 @@ if __name__ == "__main__":
     
     if stage == "annotate":
         #Done with CPU
-        # annotations = annotate(video_frames)
+        # annotations = annotate(video_frames.numpy())
         
         # with open(annotations_save_path, "w") as f:
         #     json.dump({"annotations": annotations}, f)
