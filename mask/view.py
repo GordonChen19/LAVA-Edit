@@ -151,12 +151,12 @@ def annotate(video_frames):
     cv2.destroyAllWindows()
     return annotations
 
-# from transformers.video_utils import load_video
-# import json
-# video_url = "https://huggingface.co/datasets/hf-internal-testing/sam2-fixtures/resolve/main/bedroom.mp4"
-# video_frames, _ = load_video(video_url)
+from transformers.video_utils import load_video
+import json
+video_url = "https://huggingface.co/datasets/hf-internal-testing/sam2-fixtures/resolve/main/bedroom.mp4"
+video_frames, _ = load_video(video_url)
 
-# annotations = annotate(video_frames)
+annotations = annotate(video_frames)
 
-# with open("annotations.json", "w") as f:
-#     json.dump({"annotations": annotations}, f)
+with open("annotations.json", "w") as f:
+    json.dump({"annotations": annotations}, f)

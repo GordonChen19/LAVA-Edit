@@ -90,7 +90,8 @@ if __name__ == "__main__":
     os.makedirs(video_folder, exist_ok = True)
     os.makedirs(mask_folder, exist_ok = True)
     write_video(os.path.join(video_folder, f"{identifier}.mp4"), video_frames, fps=fps)
-    
+
+    print("video_frames.shape:", video_frames.shape)
     with open(os.path.join(video_folder, f"{identifier}.txt"), "w") as f:
         f.write(video_caption)
 
