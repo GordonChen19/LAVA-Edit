@@ -1,7 +1,7 @@
 import os, json, argparse, torch, subprocess
 from torchvision.io import write_video
 from transformers.video_utils import load_video
-from mask.view import annotate
+# from mask.view import annotate
 from mask.sam2 import get_masks
 from mask.prepare_video import resize_video_frames
 
@@ -99,11 +99,11 @@ if __name__ == "__main__":
     
     if stage == "annotate":
         #Done with CPU
-        annotations = annotate(video_frames)
+        # annotations = annotate(video_frames)
         
-        with open(annotations_save_path, "w") as f:
-            json.dump({"annotations": annotations}, f)
-
+        # with open(annotations_save_path, "w") as f:
+        #     json.dump({"annotations": annotations}, f)
+        pass
     elif stage == "prepare_masks":
         
         get_masks(video_frames, 
