@@ -1,6 +1,10 @@
 deepspeed==0.17.0
 toml
 transformers
+torch
+torchvision
+cv2-python
+pillow
 diffusers>=0.35.1
 datasets
 pillow
