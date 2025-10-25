@@ -1,9 +1,9 @@
 import os, json, argparse, torch, subprocess
 from torchvision.io import write_video
 from transformers.video_utils import load_video
-from preprocess.view import annotate
-from preprocess.sam2 import get_masks
-from preprocess.prepare_video import resize_video_frames
+from mask.view import annotate
+from mask.sam2 import get_masks
+from mask.prepare_video import resize_video_frames
 
 
 if __name__ == "__main__":
@@ -22,7 +22,7 @@ if __name__ == "__main__":
         help="Prompt describing the video content",
     )
     parser.add_argument(
-        "edit_prompt",
+        "--edit_prompt",
         type=str,
         default="Two kids jump off the bed",
         help="Prompt describing the desired edit"
@@ -30,20 +30,20 @@ if __name__ == "__main__":
     parser.add_argument(
         "--stage",
         type=str,
-        choices=["annotate", "train", "inference"],
+        choices=["annotate", "prepare_masks", "train", "inference"],
         default ="train",
         help="Stage of the video editing pipeline",
     )
     parser.add_argument(
         "--annotations_save_path",
         type=str,
-        default="annotations.json",
+        default="mask/annotations.json",
         help="Path to save the annotations",
     )
     parser.add_argument(
         "--fps",
         type=int,
-        default=24,
+        default=16,
         help="Target FPS for video resampling",
     )
     parser.add_argument(
@@ -58,69 +58,72 @@ if __name__ == "__main__":
         default="example",
         help="The name of the video input (e.g. example.mp4)",
     )
+    parser.add_argument(
+        "--current_dir",
+        type=str,
+        default="/projects_vol/gp_slab/chen2008/lava",
+        help="Current working directory",
+    )
 
     args = parser.parse_args()
 
     video_path = args.video_path
     stage = args.stage
-    annotations_save_path = args.annotations_save_path
     fps = args.fps
     seconds = args.seconds
     identifier = args.identifier
     video_caption = args.video_caption
     edit_prompt = args.edit_prompt
-
+    current_dir = args.current_dir
+    annotations_save_path = os.path.join(current_dir, args.annotations_save_path)
 
     video_frames, orig_fps = load_video(video_path)
     video_frames = video_frames[:fps*seconds]  #Take first n seconds of the video [T, H, W, C]
     video_frames = resize_video_frames(torch.tensor(video_frames))
 
-    IO_save_path = "IO"
-    video_folder = "inputs"
-    mask_folder = "masks"
+    IO_save_path = os.path.join(current_dir, "IO")
+    video_folder = os.path.join(IO_save_path,"inputs")
+    mask_folder = os.path.join(IO_save_path,"masks")
 
 
     os.makedirs(IO_save_path, exist_ok = True)
-    os.makedirs(os.path.join(IO_save_path, video_folder), exist_ok = True)
-    os.makedirs(os.path.join(IO_save_path, mask_folder), exist_ok = True)
-    write_video(os.path.join(IO_save_path, video_folder, f"{identifier}.mp4"), video_frames, fps=fps)
+    os.makedirs(video_folder, exist_ok = True)
+    os.makedirs(mask_folder, exist_ok = True)
+    write_video(os.path.join(video_folder, f"{identifier}.mp4"), video_frames, fps=fps)
     
-    with open(os.path.join(IO_save_path, video_folder, f"{identifier}.txt"), "w") as f:
+    with open(os.path.join(video_folder, f"{identifier}.txt"), "w") as f:
         f.write(video_caption)
 
     
     
     if stage == "annotate":
-        
+        #Done with CPU
         annotations = annotate(video_frames)
         
         with open(annotations_save_path, "w") as f:
             json.dump({"annotations": annotations}, f)
 
-        # Get Mask via Segmentation Model
-        get_masks(video_frames, annotations_filepath=annotations_save_path, save_path=os.path.join(IO_save_path, os.path.join(mask_folder, f"{identifier}.pt")))
+    elif stage == "prepare_masks":
+        
+        get_masks(video_frames, annotations_filepath=annotations_save_path, save_path= os.path.join(mask_folder, f"{identifier}.pt"))
 
     elif stage == "train":
         # Set environment variables for single-GPU DeepSpeed training
-        env = os.environ.copy()
-        env["NCCL_P2P_DISABLE"] = "1"
-        env["NCCL_IB_DISABLE"] = "1"
-        
+
         subprocess.run(
             [
                 "deepspeed",
-                "--num_gpus=1",
-                "diffusion-pipe/train.py",
+                "--num_gpus=4",
+                os.path.join(current_dir, "diffusion-pipe/train.py"),
                 "--deepspeed",
                 "--config",
-                "diffusion-pipe/examples/wan_i2v.toml",
-            ],
-            env=env
+                os.path.join(current_dir, "diffusion-pipe/examples/wan_i2v.toml"),
+            ]
         )
         
         
-    # elif stage == "inference":
-    #     pass
+    elif stage == "inference":
+        pass
      
 
 #For Annotation, run:
@@ -129,3 +132,6 @@ if __name__ == "__main__":
 
 # pip install "huggingface_hub[cli]"
 # huggingface-cli download Wan-AI/Wan2.1-I2V-14B-480P --local-dir ./Wan2.1-I2V-14B-480P
+
+
+# /Users/gordonchen/Library/Mobile Documents/com~apple~CloudDocs/Papers/Video Editing/src/mask

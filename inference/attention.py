@@ -17,14 +17,14 @@ def get_cross_attn_map(model, token_ids):
         block_attn.append(attn_map)
 
     avg_attn_map = torch.stack(block_attn, dim=0).mean(dim=0)  #Shape [B, L1, L2]
-    return avg_attn_map[..., token_ids]  #Shape [B, L1, len(token_ids)]
+    return avg_attn_map[..., token_ids]  #Shape [B, L1, 1]
 
 
 def get_attn_mask(attn_map, threshold): 
     """
     Input attn_map: [B, L1, len(token_ids)]
     Output attn_mask: [B, L1], float tensor with 0/1 values
-    """
+    """  
     #Normalize attention map to [0, 1]
     attn_min = attn_map.min(dim=-1, keepdim=True)[0]
     attn_max = attn_map.max(dim=-1, keepdim=True)[0]

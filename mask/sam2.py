@@ -3,15 +3,15 @@ import torch, json
 import numpy as np
 
 
-def get_masks(video_frames, model="facebook/sam2.1-hiera-tiny", annotations_filepath="annotations.json", save_path="IO/masks.pt"):
+def get_masks(video_frames, model_name="facebook/sam2.1-hiera-tiny", annotations_filepath="annotations.json", save_path="IO/masks.pt"):
     """
     Input video_frames: numpy array [T, H, W, C]
     Output masks_path: path to saved masks tensor [T, H, W]
     """
 
     device = infer_device()
-    model = Sam2VideoModel.from_pretrained(model).to(device, dtype=torch.bfloat16)
-    processor = Sam2VideoProcessor.from_pretrained(model)
+    model = Sam2VideoModel.from_pretrained(model_name).to(device, dtype=torch.bfloat16)
+    processor = Sam2VideoProcessor.from_pretrained(model_name)
 
     # Initialize video inference session
     inference_session = processor.init_video_session(
