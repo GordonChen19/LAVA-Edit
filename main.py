@@ -106,7 +106,7 @@ if __name__ == "__main__":
         pass
     elif stage == "prepare_masks":
         
-        get_masks(video_frames, 
+        get_masks(video_frames.numpy(), 
                   annotations_filepath=annotations_save_path, 
                   save_path= os.path.join(mask_folder, f"{identifier}.pt"))
 
