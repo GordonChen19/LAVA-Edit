@@ -18,6 +18,8 @@ def resize_video_frames(video_frames: torch.Tensor, size: tuple[int, int] = (480
             frame = frame.permute(1,2,0)  # [crop_h, crop_w, C]
             cropped_frames.append(frame)
         video_frames = torch.stack(cropped_frames, dim=0)  # [T, crop_h, crop_w, C]
+
+    print("Resized video frames shape:", video_frames.shape)
     
     return video_frames
     

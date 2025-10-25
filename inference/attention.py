@@ -23,7 +23,7 @@ def get_cross_attn_map(model, token_ids):
 def get_attn_mask(attn_map, threshold): 
     """
     Input attn_map: [B, L1, len(token_ids)]
-    Output attn_mask: [B, L1], float tensor with 0/1 values
+    Output attn_mask: [B, L1], float tenso displar with 0/1 values
     """  
     #Normalize attention map to [0, 1]
     attn_min = attn_map.min(dim=-1, keepdim=True)[0]
